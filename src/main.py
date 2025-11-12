@@ -1,7 +1,8 @@
 import os
 import time
 from graph.graph import Graph
-from utils import bfs, dijkstra
+from utils import bfs, dijkstra, cyclic
+
 
 def sanitize_dist(dist):
     return [distance if distance < 10000 else "impossible" for distance in dist]
@@ -21,7 +22,7 @@ for filename in filenames:
 
 # Problem: None
 for graph, filename in graph_filename:
-    tag = "NO REDS"
+    tag = "NONE"
     search_start = time.time()
     list = graph.remove_reds()
     dist = bfs.bfs(graph.source, list)
@@ -34,9 +35,9 @@ for graph, filename in graph_filename:
 
 # Problem: Few
 for graph, filename in graph_filename:
-    tag = "FEWEST REDS ON PATH"
+    tag = "FEW"
     search_start = time.time()
-    dist = dijkstra.dijk(graph.weight_red(), graph.source, graph.target)
+    dist = dijkstra.dijk(graph.weight_red(1), graph.source, graph.target)
     search_end = time.time()
 
     if graph.source in graph.reds:
@@ -49,7 +50,7 @@ for graph, filename in graph_filename:
 
 # Problem: Alternate
 for graph, filename in graph_filename:
-    tag = "ALTERNATE RED AND BLACK"
+    tag = "ALTERNATE"
     search_start = time.time()
     list = graph.make_alternated()
     dist = bfs.bfs(graph.source, list)
@@ -60,3 +61,46 @@ for graph, filename in graph_filename:
     search_time = (search_end - search_start) * 1000
     print(f"{tag:<15} {filename:<20} Distance: {dist[graph.target]:<20} Searching: {search_time:>8.2f} ms")
     
+
+# Problem: Many
+for graph, filename in graph_filename:
+    tag = "MANY"
+    search_start = time.time()
+    if not graph.isCyclic:
+        dist = abs(dijkstra.dijk(graph.weight_red(-1), graph.source, graph.target))
+        if graph.source in graph.reds:
+            dist = dist + 1
+
+        if dist >= 1000000000:
+            dist = "impossible"
+    else:
+        dist = "NP hard"
+
+    search_end = time.time()
+
+    search_time = (search_end - search_start) * 1000
+    print(f"{tag:<15} {filename:<20} Amount of reds: {dist:<20} Searching: {search_time:>8.2f} ms")
+
+    # IDEA: if we modified dijkstra to store the currently taken path on a given bfs and checked whether the vertex currently being searched is part of the noted path, the solution may work for cyclic graphs.
+
+
+    # Problem: Some
+for graph, filename in graph_filename:
+    tag = "SOME"
+    search_start = time.time()
+    if not graph.isCyclic:
+        dist = abs(dijkstra.dijk(graph.weight_red(-1), graph.source, graph.target))
+        
+        if graph.source in graph.reds:
+            dist = dist + 1
+
+        if dist < 1000000000:
+            dist = "True" if dist > 0 else "False"
+        else:
+            dist = "impossible"
+    else:
+        dist = "NP hard"
+    search_end = time.time()
+
+    search_time = (search_end - search_start) * 1000
+    print(f"{tag:<15} {filename:<20} Path exists: {(dist):<20} Searching: {search_time:>8.2f} ms")

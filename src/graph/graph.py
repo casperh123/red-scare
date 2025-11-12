@@ -1,5 +1,6 @@
 
 from copy import deepcopy
+from utils import cyclic
 
 
 class Graph:
@@ -20,6 +21,7 @@ class Graph:
         self.adj_list = []
         self.reds = set()
         self.vertex_to_index = {}
+        self.isDirected = False
 
         for line in content[2:]: 
             split_line = line.split()
@@ -50,10 +52,13 @@ class Graph:
 
         self.source = self.vertex_to_index[source]
         self.target = self.vertex_to_index[target]
+        self.isCyclic = cyclic.isCyclic(self.adj_list)
 
                 
     def is_directed(self, line: str):
+        self.isDirected = True
         return line == '->'
+    
     
     def add_adjacent(self, source, target):
         # CHANGE IF YOU WANT TO DO SOMETHING USEFUL GOD DAMMIT
@@ -86,11 +91,11 @@ class Graph:
 
         return adj_list
     
-    def weight_red(self):
+    def weight_red(self, red_weight):
         adj_list = deepcopy(self.adj_list)
 
         for index, vertex in enumerate(adj_list):
-            adj_list[index] = [(edge, 1 if edge in self.reds else 0) for edge in vertex]
+            adj_list[index] = [(edge, red_weight if edge in self.reds else 0) for edge in vertex]
 
         return adj_list
     
