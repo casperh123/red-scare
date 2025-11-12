@@ -30,11 +30,11 @@ for graph, filename in graph_filename:
 
 f = open("results.txt", mode="w")
 
-f.write(f"{'Filename':<20} {'None':<15} {'Some':<15} {'Many':<15} {'Few':<15} {'Alternate':<15} \n")
+f.write(f"{'Filename':<20} {'None':>15} {'Some':>15} {'Many':>15} {'Few':>15} {'Alternate':>15} \n")
 print(f"{'Filename':<20} {'None':<15} {'Some':<15} {'Many':<15} {'Few':<15} {'Alternate':<15}")
       
 for result in results:
-    f.write(f"{result[0]:<20} {result[1]:<15} {result[2]:<15} {result[3]:<15} {result[4]:<15} {result[5]:<15} \n")
+    f.write(f"{result[0]:<20} {result[1]:>15} {result[2]:>15} {result[3]:>15} {result[4]:>15} {result[5]:>15} \n")
     print(f"{result[0]:<20} {result[1]:<15} {result[2]:<15} {result[3]:<15} {result[4]:<15} {result[5]:<15}")
 
 f.close()

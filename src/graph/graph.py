@@ -116,14 +116,12 @@ class Graph:
                 vertex = list(filter(lambda x: x in self.reds, vertex))
             adj_list[index] = vertex
         return adj_list
-    
-    def sanitize_dist(self, dist):
-        return [distance if distance < 1000000 else "impossible" for distance in dist]
+
 
     def solve_none(self):
         list = self.remove_reds()
         dist = bfs.bfs(self.source, list)
-        dist = self.sanitize_dist(dist)
+        dist = [distance if distance < 1000000 else -1 for distance in dist]
 
         return dist[self.target]
     
@@ -131,12 +129,12 @@ class Graph:
         dist = dijkstra.dijk(self.weight_red(1), self.source, self.target)
         if self.source in self.reds:
             dist = dist + 1
-        return dist if dist < 1000000000 else "impossible"
+        return dist if dist < 1000000000 else -1
 
     def solve_alternate(self):
         list = self.make_alternated()
         dist = bfs.bfs(self.source, list)
-        dist = self.sanitize_dist(dist)
+        dist = ["True" if distance < 1000000 else "False" for distance in dist]
 
         return dist[self.target]
 
@@ -147,7 +145,7 @@ class Graph:
                 dist = dist + 1
 
             if dist >= 1000000000:
-                dist = "impossible"
+                dist = -1 # impossible
         else:
             dist = "NP hard"
 
@@ -163,7 +161,7 @@ class Graph:
             if dist < 1000000000:
                 dist = "True" if dist > 0 else "False"
             else:
-                dist = "impossible"
+                dist = "False" # impossible
         else:
             dist = "NP hard"
 
