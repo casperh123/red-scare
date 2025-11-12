@@ -1,7 +1,6 @@
 
 from copy import deepcopy
-from utils import cyclic
-
+from utils import bfs, dijkstra, cyclic
 
 class Graph:
 
@@ -117,3 +116,55 @@ class Graph:
                 vertex = list(filter(lambda x: x in self.reds, vertex))
             adj_list[index] = vertex
         return adj_list
+    
+    def sanitize_dist(self, dist):
+        return [distance if distance < 1000000 else "impossible" for distance in dist]
+
+    def solve_none(self):
+        list = self.remove_reds()
+        dist = bfs.bfs(self.source, list)
+        dist = self.sanitize_dist(dist)
+
+        return dist[self.target]
+    
+    def solve_few(self):
+        dist = dijkstra.dijk(self.weight_red(1), self.source, self.target)
+        if self.source in self.reds:
+            dist = dist + 1
+        return dist if dist < 1000000000 else "impossible"
+
+    def solve_alternate(self):
+        list = self.make_alternated()
+        dist = bfs.bfs(self.source, list)
+        dist = self.sanitize_dist(dist)
+
+        return dist[self.target]
+
+    def solve_many(self):
+        if not self.isCyclic:
+            dist = abs(dijkstra.dijk(self.weight_red(-1), self.source, self.target))
+            if self.source in self.reds:
+                dist = dist + 1
+
+            if dist >= 1000000000:
+                dist = "impossible"
+        else:
+            dist = "NP hard"
+
+        return dist
+
+    def solve_some(self):
+        if not self.isCyclic:
+            dist = abs(dijkstra.dijk(self.weight_red(-1), self.source, self.target))
+            
+            if self.source in self.reds:
+                dist = dist + 1
+
+            if dist < 1000000000:
+                dist = "True" if dist > 0 else "False"
+            else:
+                dist = "impossible"
+        else:
+            dist = "NP hard"
+
+        return dist
