@@ -43,4 +43,4 @@ for graph, filename in graph_filename:
     dist = dist if dist < 1000000000 else "impossible"
 
     search_time = (search_end - search_start) * 1000
-    print(f"{tag:<20} {filename:<20} Amount of reds: {dist:<20} Searching: {search_time:>8.2f} ms")
+    print(f"{tag:<15} {filename:<20} Amount of reds: {dist:<20} Searching: {search_time:>8.2f} ms")
