@@ -19,6 +19,7 @@ graph_filename = []
 for filename in filenames:
     graph_filename.append((Graph(full_path + filename), filename))
 
+# Problem: None
 for graph, filename in graph_filename:
     tag = "NO REDS"
     search_start = time.time()
@@ -31,6 +32,7 @@ for graph, filename in graph_filename:
     search_time = (search_end - search_start) * 1000
     print(f"{tag:<15} {filename:<20} Distance: {dist[graph.target]:<20} Searching: {search_time:>8.2f} ms")
 
+# Problem: Few
 for graph, filename in graph_filename:
     tag = "FEWEST REDS ON PATH"
     search_start = time.time()
@@ -44,3 +46,17 @@ for graph, filename in graph_filename:
 
     search_time = (search_end - search_start) * 1000
     print(f"{tag:<15} {filename:<20} Amount of reds: {dist:<20} Searching: {search_time:>8.2f} ms")
+
+# Problem: Alternate
+for graph, filename in graph_filename:
+    tag = "ALTERNATE RED AND BLACK"
+    search_start = time.time()
+    list = graph.make_alternated()
+    dist = bfs.bfs(graph.source, list)
+    search_end = time.time()
+    
+    dist = sanitize_dist(dist)
+
+    search_time = (search_end - search_start) * 1000
+    print(f"{tag:<15} {filename:<20} Distance: {dist[graph.target]:<20} Searching: {search_time:>8.2f} ms")
+    

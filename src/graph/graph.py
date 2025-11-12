@@ -101,3 +101,14 @@ class Graph:
             adj_list[index] = [(edge, 1 if edge in self.reds else 0) for edge in vertex]
 
         return adj_list
+    
+    def make_alternated(self):
+        adj_list = deepcopy(self.adj_list)
+
+        for index, vertex in enumerate(adj_list):
+            if index in self.reds:
+                vertex = list(filter(lambda x: x not in self.reds, vertex))
+            else:
+                vertex = list(filter(lambda x: x in self.reds, vertex))
+            adj_list[index] = vertex
+        return adj_list
