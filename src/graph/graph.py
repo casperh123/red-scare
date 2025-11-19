@@ -1,6 +1,7 @@
 
 from copy import deepcopy
 from utils import bfs, dijkstra, cyclic
+import time
 
 class Graph:
 
@@ -119,26 +120,30 @@ class Graph:
 
 
     def solve_none(self):
+        start = time.time()
         list = self.remove_reds()
         dist = bfs.bfs(self.source, list)
         dist = [distance if distance < 1000000 else -1 for distance in dist]
 
-        return dist[self.target]
+        return (dist[self.target], (time.time() - start))
     
     def solve_few(self):
+        start = time.time()
         dist = dijkstra.dijk(self.weight_red(1), self.source, self.target)
         if self.source in self.reds:
             dist = dist + 1
-        return dist if dist < 1000000000 else -1
+        return (dist if dist < 1000000000 else -1, (time.time() - start))
 
     def solve_alternate(self):
+        start = time.time()
         list = self.make_alternated()
         dist = bfs.bfs(self.source, list)
         dist = ["True" if distance < 1000000 else "False" for distance in dist]
 
-        return dist[self.target]
+        return (dist[self.target], (time.time() - start))
 
     def solve_many(self):
+        start = time.time()
         if not self.isCyclic:
             dist = abs(dijkstra.dijk(self.weight_red(-1), self.source, self.target))
             if self.source in self.reds:
@@ -149,9 +154,10 @@ class Graph:
         else:
             dist = "NP hard"
 
-        return dist
+        return (dist,(time.time() - start))
 
     def solve_some(self):
+        start = time.time()
         if not self.isCyclic:
             dist = abs(dijkstra.dijk(self.weight_red(-1), self.source, self.target))
             
@@ -165,4 +171,4 @@ class Graph:
         else:
             dist = "NP hard"
 
-        return dist
+        return (dist,(time.time() - start))
